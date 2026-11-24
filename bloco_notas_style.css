@@ -1,0 +1,306 @@
+/*
+  =====================================================================
+  BLOCO DE ATIVIDADES - VISUAL (CSS)
+  =====================================================================
+  Indice:
+    1. Cores e temas (variaveis)
+    2. Base (corpo da pagina, botoes, campos)
+    3. Cabecalho
+    4. Layout principal (colunas)
+    5. Cards
+    6. Blocos de horario
+    7. Tags (chips) e lista de tags
+    8. Busca e resumo
+  =====================================================================
+*/
+
+
+/* ---------------------------------------------------------------------
+   1. CORES E TEMAS
+   Todas as cores do sistema ficam nestas variaveis.
+   Trocar uma cor aqui muda a pagina inteira.
+
+   Exemplo: para trocar a cor de destaque do tema claro de azul para verde,
+   altere   --acc:#2563eb;   para   --acc:#16a34a;
+   --------------------------------------------------------------------- */
+
+/* Tema claro (padrao) */
+:root {
+  --bg:    #f3f4f6;  /* fundo da pagina */
+  --card:  #ffffff;  /* fundo dos cartoes e do cabecalho */
+  --txt:   #1f2937;  /* cor do texto */
+  --muted: #6b7280;  /* texto secundario (cinza) */
+  --bd:    #d1d5db;  /* bordas */
+  --acc:   #2563eb;  /* cor de destaque (botao principal, horarios) */
+  --accx:  #ffffff;  /* cor do texto sobre a cor de destaque */
+  --inp:   #ffffff;  /* fundo dos campos de digitar */
+}
+
+/* Tema escuro: ativado quando o body tem a classe "dark" (feito pelo app.js) */
+body.dark {
+  --bg:    #111827;
+  --card:  #1f2937;
+  --txt:   #f3f4f6;
+  --muted: #9ca3af;
+  --bd:    #374151;
+  --acc:   #3b82f6;
+  --accx:  #ffffff;
+  --inp:   #111827;
+}
+
+
+/* ---------------------------------------------------------------------
+   2. BASE
+   --------------------------------------------------------------------- */
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", Arial, sans-serif;  /* para trocar a fonte, altere aqui */
+  background: var(--bg);
+  color: var(--txt);
+  font-size: 14px;                              /* tamanho geral do texto */
+}
+
+/* Botoes, campos, selects e caixas de texto compartilham o mesmo estilo */
+button, input, select, textarea {
+  font: inherit;
+  color: var(--txt);
+  background: var(--inp);
+  border: 1px solid var(--bd);
+  border-radius: 6px;
+  padding: 5px 9px;
+}
+
+button { cursor: pointer; background: var(--card); }
+button:hover { border-color: var(--acc); }
+
+/* Botao principal (classe "pri"), ex.: botao Criar tag */
+button.pri {
+  background: var(--acc);
+  color: var(--accx);
+  border-color: var(--acc);
+}
+
+/* Botao pequeno (classe "sm"), ex.: Renomear, Excluir */
+button.sm { padding: 1px 7px; font-size: 12px; }
+
+h1 { font-size: 16px; margin: 0 8px 0 0; }
+
+.muted { color: var(--muted); }
+
+/* Linha horizontal de itens (usada em varios lugares) */
+.row {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 6px;
+}
+
+/* Seletor de cor das tags */
+input[type=color] { padding: 0; width: 30px; height: 28px; }
+
+
+/* ---------------------------------------------------------------------
+   3. CABECALHO
+   --------------------------------------------------------------------- */
+
+header {
+  position: sticky;   /* fica fixo no topo ao rolar a pagina */
+  top: 0;
+  z-index: 5;
+  background: var(--card);
+  border-bottom: 1px solid var(--bd);
+  padding: 8px 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+
+
+/* ---------------------------------------------------------------------
+   4. LAYOUT PRINCIPAL
+   Duas colunas: blocos do dia (flexivel) + barra lateral (290px).
+
+   Exemplo: para deixar a barra lateral mais larga, troque 290px por 360px.
+   --------------------------------------------------------------------- */
+
+main {
+  max-width: 1100px;  /* largura maxima da pagina */
+  margin: 0 auto;
+  padding: 12px;
+  display: grid;
+  grid-template-columns: 1fr 290px;
+  gap: 12px;
+}
+
+/* Em telas estreitas, vira uma coluna so */
+@media (max-width: 850px) {
+  main { grid-template-columns: 1fr; }
+}
+
+
+/* ---------------------------------------------------------------------
+   5. CARDS (caixas brancas)
+   --------------------------------------------------------------------- */
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--bd);
+  border-radius: 10px;  /* arredondamento dos cantos */
+  padding: 10px;
+  margin-bottom: 12px;
+}
+
+.card h2 { font-size: 14px; margin: 0 0 8px; }
+
+
+/* ---------------------------------------------------------------------
+   6. BLOCOS DE HORARIO
+   Cada bloco: coluna do horario (96px) + area de texto e tags.
+   --------------------------------------------------------------------- */
+
+.block {
+  display: grid;
+  grid-template-columns: 96px 1fr;
+  gap: 8px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--bd);
+}
+.block:last-child { border-bottom: 0; }
+
+/* Horario (ex.: 07:00) */
+.time { font-weight: 600; color: var(--acc); }
+.time small { display: block; color: var(--muted); font-weight: 400; }
+
+/* Caixa onde voce escreve a atividade.
+   Exemplo: para deixar mais alta por padrao, aumente min-height (54px). */
+textarea {
+  width: 100%;
+  min-height: 54px;
+  resize: vertical;
+}
+
+
+/* ---------------------------------------------------------------------
+   7. TAGS (chips) E LISTA DE TAGS
+   --------------------------------------------------------------------- */
+
+/* Linha de tags dentro de cada bloco */
+.chips { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 5px; }
+
+/* Tag individual. A cor de borda/fundo e definida pelo app.js
+   conforme a cor escolhida para cada tag. */
+.chip {
+  border-radius: 12px;
+  padding: 1px 9px;
+  font-size: 12px;
+  border: 1px solid;
+  cursor: pointer;
+  user-select: none;
+  background: transparent;
+}
+.chip.on { color: #fff; }  /* tag marcada neste bloco */
+
+/* Linha de cada tag no painel lateral (cor, nome, renomear, excluir) */
+.tagrow { display: flex; gap: 6px; align-items: center; margin: 4px 0; }
+.tagrow .nm { flex: 1; overflow: hidden; text-overflow: ellipsis; }
+
+
+/* ---------------------------------------------------------------------
+   8. BUSCA E RESUMO
+   --------------------------------------------------------------------- */
+
+/* Resultado da busca */
+.res { padding: 5px 0; border-bottom: 1px solid var(--bd); cursor: pointer; }
+.res:hover { background: var(--bg); }
+
+/* Linha do resumo (nome da tag + quantidade de horas) */
+.sum { display: flex; justify-content: space-between; padding: 2px 0; }
+
+
+/* ---------------------------------------------------------------------
+   9. ATIVIDADES DENTRO DE CADA BLOCO DE HORA
+   Cada hora tem uma lista de quadros de atividade (.act).
+   --------------------------------------------------------------------- */
+
+/* Garante que elementos com o atributo "hidden" realmente fiquem escondidos */
+[hidden] { display: none !important; }
+
+/* Coluna com todas as atividades da hora */
+.acts { display: flex; flex-direction: column; gap: 6px; }
+
+/* Quadro de uma atividade */
+.act {
+  border: 1px solid var(--bd);
+  border-radius: 8px;
+  padding: 6px;
+}
+.act textarea { min-height: 42px; }   /* altura inicial da caixa de texto */
+
+/* Linha de botoes e tags abaixo do texto da atividade */
+.actbar { display: flex; flex-wrap: wrap; gap: 4px; align-items: center; margin-top: 5px; }
+
+/* Linha do botao "+ Adicionar atividade" no fim do bloco */
+.blockbar { display: flex; gap: 6px; }
+
+/* "x" dentro da tag aplicada (remove a tag da atividade) */
+.chipx { cursor: pointer; margin-left: 2px; }
+.chipx:hover { text-decoration: underline; }
+
+/* Botao Nota destacado quando a atividade ja tem nota */
+.notebtn.has { background: #fef08a; border-color: #ca8a04; color: #422006; }
+
+
+/* ---------------------------------------------------------------------
+   10. JANELAS FLUTUANTES (menu de tags e post-it)
+   --------------------------------------------------------------------- */
+
+/* Menu de tags que abre em "+ tag" */
+.popmenu {
+  position: absolute;
+  z-index: 20;
+  background: var(--card);
+  border: 1px solid var(--bd);
+  border-radius: 8px;
+  padding: 6px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  max-width: 280px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, .25);
+}
+.popmenu .pad { padding: 2px 4px; }
+
+/* Post-it (nota). Exemplo: para deixar maior, aumente width e a altura do textarea.
+   As cores sao fixas (amarelo) nos dois temas. */
+.postit {
+  position: absolute;
+  z-index: 30;
+  width: 260px;
+  background: #fef08a;
+  color: #422006;
+  border: 1px solid #ca8a04;
+  border-radius: 4px;
+  padding: 8px;
+  box-shadow: 4px 6px 14px rgba(0, 0, 0, .3);
+}
+.postit-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+  font-size: 12px;
+  margin-bottom: 6px;
+}
+.postit textarea {
+  min-height: 150px;
+  background: #fef9c3;
+  color: #422006;
+  border-color: #ca8a04;
+}
+.postit button { background: #fde047; color: #422006; border-color: #ca8a04; }

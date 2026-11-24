@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bloco de Atividades</title>
+
+<!--
+  =====================================================================
+  BLOCO DE ATIVIDADES - ESTRUTURA DA PAGINA (HTML)
+  =====================================================================
+  Este projeto tem 3 arquivos na mesma pasta:
+    index.html  -> estrutura da pagina (este arquivo)
+    style.css   -> visual: cores, tema claro/escuro, layout
+    app.js      -> logica: salvar dados, tags, blocos, busca, exportar
+
+  Para usar: duplo clique em index.html (abre no Edge ou Chrome).
+
+  IMPORTANTE: os "id" dos elementos (ex.: id="prev", id="blocks")
+  sao usados pelo app.js. Se mudar um id aqui, mude tambem no app.js.
+  Os blocos de horario e a lista de tags sao criados pelo app.js,
+  por isso aparecem vazios aqui (<div id="blocks"></div>).
+  =====================================================================
+-->
+
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- =================== CABECALHO (barra superior) =================== -->
+<!--
+  Exemplo: para criar um novo botao no cabecalho:
+    1) Adicione aqui:      <button id="meuBotao">Meu botao</button>
+    2) No app.js, na secao EVENTOS, adicione:
+         $('meuBotao').onclick = () => { alert('Ola'); };
+-->
+<header>
+  <h1>Bloco de Atividades</h1>
+
+  <!-- Navegacao entre dias -->
+  <button id="prev">Anterior</button>
+  <input type="date" id="date">
+  <button id="next">Proximo</button>
+  <button id="today">Hoje</button>
+
+  <!-- Espacador: empurra os botoes seguintes para a direita -->
+  <span style="flex:1"></span>
+
+  <!-- Exportacao e tema -->
+  <button id="copy">Copiar dia</button>
+  <button id="expTxt">TXT do dia</button>
+  <button id="expCsv">CSV do dia</button>
+  <button id="expCsvAll">CSV de tudo</button>
+  <button id="theme">Tema claro/escuro</button>
+</header>
+
+<main>
+
+  <!-- =================== COLUNA PRINCIPAL: BLOCOS DO DIA =================== -->
+  <section>
+    <div class="card">
+      <h2 id="dayTitle"></h2>
+
+      <!-- Os blocos de 1 hora sao inseridos aqui pelo app.js (funcao renderBlocks).
+           Cada bloco tem varias atividades; cada atividade tem texto, tags e nota. -->
+      <div id="blocks"></div>
+
+      <!-- Adicionar uma hora fora do expediente (ex.: 19:00 - 20:00) -->
+      <div class="row" style="margin-top:8px">
+        <span class="muted">Bloco extra:</span>
+        <select id="extraSel"></select>
+        <button id="extraAdd">+ Adicionar</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- =================== BARRA LATERAL =================== -->
+  <aside>
+
+    <!-- Gerenciador de tags: criar, renomear, trocar cor, excluir -->
+    <div class="card">
+      <h2>Tags</h2>
+      <div class="row">
+        <input id="tagName" placeholder="Nova tag" style="flex:1;min-width:0">
+        <input type="color" id="tagColor" value="#2563eb">
+        <button class="pri" id="tagAdd">Criar</button>
+      </div>
+      <!-- Lista de tags inserida pelo app.js (funcao renderTags) -->
+      <div id="tagList"></div>
+    </div>
+
+    <!-- Resumo: horas com registro, total de atividades e atividades por tag -->
+    <div class="card">
+      <h2>Resumo do dia</h2>
+      <div id="summary"></div>
+    </div>
+
+    <!-- Busca por texto ou tag em todos os dias salvos -->
+    <div class="card">
+      <h2>Buscar no historico</h2>
+      <input id="search" placeholder="Texto ou tag..." style="width:100%">
+      <div id="results" style="margin-top:6px;max-height:240px;overflow:auto"></div>
+    </div>
+
+    <!-- Configuracoes: horario do expediente e backup -->
+    <div class="card">
+      <h2>Configuracoes</h2>
+      <div class="row">
+        Expediente:
+        <input type="number" id="startH" min="0" max="23" style="width:60px">
+        as
+        <input type="number" id="endH" min="1" max="24" style="width:60px">
+        h
+      </div>
+      <div class="row">
+        <button id="bkp">Backup (.json)</button>
+        <button id="rst">Importar (.json, .csv, .txt)</button>
+        <!-- Campo de arquivo escondido; o botao Importar o aciona -->
+        <input type="file" id="file" accept=".json,.csv,.txt" style="display:none">
+      </div>
+      <div class="muted" style="font-size:12px">
+        Os dados ficam salvos neste navegador. Faca backup de vez em quando.
+      </div>
+    </div>
+
+  </aside>
+</main>
+
+<!-- =================== JANELAS FLUTUANTES (controladas pelo app.js) =================== -->
+
+<!-- Menu de tags: abre ao clicar em "+ tag" numa atividade -->
+<div id="tagMenu" class="popmenu" hidden></div>
+
+<!-- Post-it de nota: abre ao clicar em "Nota" numa atividade.
+     Exemplo: para mudar o texto de dica, altere o placeholder do textarea. -->
+<div id="postit" class="postit" hidden>
+  <div class="postit-head">
+    <span id="postitTitle">Nota</span>
+    <button id="postitClose" class="sm">Fechar</button>
+  </div>
+  <textarea id="postitText" placeholder="Explique com mais detalhes o que foi feito..."></textarea>
+</div>
+
+<!-- O app.js fica no FINAL do body de proposito: so roda depois que os elementos acima existem -->
+<script src="app.js"></script>
+</body>
+</html>
